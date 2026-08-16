@@ -1,0 +1,48 @@
+body {
+  margin: 0;
+  font-family: system-ui, sans-serif;
+  padding: 1rem;
+}
+
+.contenedor {
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  max-width: 400px;
+}
+
+input, select, button {
+  padding: 0.5rem;
+  font-size: 1rem;
+}
+
+.tabla-scroll {
+  overflow-x: auto;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+th, td {
+  padding: 0.5rem;
+  text-align: center;
+  border-bottom: 1px solid #ddd;
+}
+
+.error {
+  color: #c0392b;
+  font-size: 0.9rem;
+}
+
+@media (max-width: 600px) {
+  form {
+    max-width: 100%;
+  }
+}
