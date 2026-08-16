@@ -1,6 +1,8 @@
 import axios from 'axios';
+/*Local
+const API_URL = "http://127.0.0.1:8000";*/
 
-const API_URL = "http://127.0.0.1:8000";
+const API_URL = "https://roda-backend-jr4j.onrender.com";
 
 export const simular_credito = async (data) => {
     try {
