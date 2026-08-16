@@ -39,18 +39,16 @@ npm install
 ## 5. Variables de entorno
 No se usan variables de entorno en el frontend. La URL del backend está definida como constante en `src/services/api.js`:
 ```js
-const API_URL = "http://127.0.0.1:8000";
+const API_URL = "https://roda-backend-jr4j.onrender.com";
 ```
-> Si el backend corre en otra URL (por ejemplo, tras el despliegue), esta constante debe actualizarse manualmente antes de compilar.
+> Actualmente apunta al backend desplegado en producción (Render). Si se quiere correr contra un backend local, cambiar esta constante a `http://127.0.0.1:8000` antes de ejecutar `npm run dev`.
 
 ## 6. Ejecutar el proyecto
-Con el backend ya corriendo en `http://127.0.0.1:8000` (ver README del repositorio de Backend):
-
 ```bash
 npm run dev
 ```
 
-La aplicación queda disponible en `http://localhost:5173`.
+La aplicación queda disponible en `http://localhost:5173`, consumiendo el backend según la URL configurada en `api.js` (ver sección 5).
 
 ## 7. Flujo de la aplicación
 
@@ -63,16 +61,16 @@ Este orden (simular → ver resumen y amortización → registrar) responde dire
 
 ## 8. Manejo de estado
 
-El estado se maneja con `useState` de React, centralizado en `App.jsx` (patrón "lifting state up"): `App.jsx` guarda el resultado de la simulación y el de la solicitud, y los reparte como props a los componentes que los necesitan. No se usó Context API ni ninguna librería de manejo de estado global (Redux, Zustand), porque el flujo es lineal y de una sola pantalla perfecto para este alcance.
+El estado se maneja con `useState` de React, centralizado en `App.jsx` (patrón "lifting state up"): `App.jsx` guarda el resultado de la simulación y el de la solicitud, y los reparte como props a los componentes que los necesitan. No se usó Context API ni ninguna librería de manejo de estado global (Redux, Zustand), porque el flujo es lineal y de una sola pantalla, perfecto para este alcance.
 
 ## 9. Validaciones implementadas (frontend)
 
-Además de los atributos `required` en cada input, se implementaron validaciones en tiempo real (mientras el usuario escribe), como apoyo de UX — la validación mas fuerte ocurre en el backend:
+Además de los atributos `required` en cada input, se implementaron validaciones en tiempo real (mientras el usuario escribe), como apoyo de UX — la validación más fuerte ocurre siempre en el backend:
 
 | Validación | Componente |
 |---|---|
 | valor_vehiculo ≥ $500.000 COP | FormularioSimulacion |
-| cuota_inicial no mayor al valor del vehículo | FormularioSimulacion |
+| cuota_inicial debe ser menor al valor del vehículo | FormularioSimulacion |
 | Formato de correo válido | FormularioSolicitud |
 | Teléfono solo dígitos | FormularioSolicitud |
 
@@ -82,10 +80,16 @@ El botón de envío de cada formulario se deshabilita mientras existan errores d
 
 - **`services/api.js` centraliza todas las llamadas HTTP:** evita repetir la URL base y la lógica de manejo de errores en cada componente.
 - **Componentes controlados:** todos los inputs de formulario usan `value` + `onChange` administrados por React, no el DOM, para poder validar en tiempo real y leer los valores antes de enviarlos a la API.
-- **`TablaAmortizacion` depende de los datos de la simulación** ver punto 7.
+- **`TablaAmortizacion` depende de los datos de la simulación, no de un ID de solicitud registrada:** ver punto 7. Esto permite verla sin necesidad de haberse registrado, en línea con la HU-01.
 
 ## 11. Alcance y limitaciones conocidas
 
 - Sin estilos visuales elaborados (CSS mínimo); el foco del desarrollo estuvo en la lógica, la integración con el backend y las validaciones.
 - No hay manejo de rutas (React Router): toda la aplicación vive en una sola vista, ya que el flujo es lineal y no lo requiere.
 - No se persiste el estado entre recargas de página (por ejemplo, con localStorage); si el usuario recarga, debe simular de nuevo.
+
+## 12. Despliegue
+
+- Frontend en producción: https://rd-frontend.vercel.app
+
+> Nota: si la primera petición al backend tarda en responder, es porque el plan gratuito de Render "duerme" el servicio tras un periodo de inactividad (ver README del repositorio de Backend).
